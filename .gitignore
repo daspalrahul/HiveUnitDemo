@@ -9,3 +9,4 @@ hooks
 info
 metastore_db/
 warehouse_dir/
+target
