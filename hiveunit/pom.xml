@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>hiveunitdemo</artifactId>
+    <groupId>com.xconf</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>hiveunit</artifactId>
+  <properties>
+    <hive.version>1.2.1000.2.4.0.0-169</hive.version>
+    <hadoop.version>2.7.1.2.4.0.0-169</hadoop.version>
+    <minicluster.version>0.1.6</minicluster.version>
+    <property-parser.version>0.0.2</property-parser.version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <systemPropertyVariables>
+            <propertyName>propertyValue</propertyName>
+            <buildDirectory>${project.build.directory}</buildDirectory>
+            <temp-base.path>${project.build.directory}/test-data</temp-base.path>
+            <workflow-dir.path>../workflows</workflow-dir.path>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <!--Hadoop Client-->
+    <!--HiveConf inherits from Configuration, thus hadoop-client-->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Hive -->
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-service</artifactId>
+      <version>${hive.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Hive JDBC -->
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-jdbc</artifactId>
+      <version>${hive.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.achalaggarwal.workerbee</groupId>
+      <artifactId>workerbee-core</artifactId>
+      <version>3.3.0-hive0.13.1-hadoop2.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit-addons</groupId>
+      <artifactId>junit-addons</artifactId>
+      <version>1.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.sakserv</groupId>
+      <artifactId>hadoop-mini-clusters</artifactId>
+      <version>${minicluster.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.sakserv</groupId>
+      <artifactId>hadoop-mini-clusters-common</artifactId>
+      <version>${minicluster.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.sakserv</groupId>
+      <artifactId>hadoop-mini-clusters-zookeeper</artifactId>
+      <version>${minicluster.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.sakserv</groupId>
+      <artifactId>hadoop-mini-clusters-hiveserver2</artifactId>
+      <version>${minicluster.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.sakserv</groupId>
+      <artifactId>hadoop-mini-clusters-hivemetastore</artifactId>
+      <version>${minicluster.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.sakserv</groupId>
+      <artifactId>property-parser</artifactId>
+      <version>${property-parser.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.11.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+</project>

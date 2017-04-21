@@ -1,0 +1,11 @@
+.idea
+config
+HEAD
+*.log
+*.iml
+*.ipr
+description
+hooks
+info
+metastore_db/
+warehouse_dir/

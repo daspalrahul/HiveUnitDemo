@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="process-data-/${olgaUser}">
+  <global>
+    <job-tracker>${jobTracker}</job-tracker>
+    <name-node>${nameNode}</name-node>
+    <configuration>
+      <property>
+        <name>oozie.launcher.mapred.job.queue.name</name>
+        <value>${launcherQueueName}</value>
+      </property>
+      <property>
+        <name>mapred.job.queue.name</name>
+        <value>${queueName}</value>
+      </property>
+      <property>
+        <name>oozie.launcher.fs.permissions.umask-mode</name>
+        <value>007</value>
+      </property>
+    </configuration>
+  </global>
+  <credentials>
+    <credential name="hive2-cred" type="hive2">
+      <property>
+        <name>hive2.server.principal</name>
+        <value>${hive2Principal}</value>
+      </property>
+      <property>
+        <name>hive2.jdbc.url</name>
+        <value>${hiveServer2Url};retries=3</value>
+      </property>
+    </credential>
+  </credentials>
+  <start to="populate-customer-producttype-total"/>
+  <action cred="${kerberos.workflow.credentials}" name="populate-customer-producttype-total" retry-interval="1" retry-max="3">
+    <hive2 xmlns="uri:oozie:hive2-action:0.1">
+      <job-xml>${subworkflowPath}/hive-config.xml</job-xml>
+      <configuration>
+        <property>
+          <name>oozie.hive.defaults</name>
+          <value>${subworkflowPath}/hive-config.xml</value>
+        </property>
+      </configuration>
+      <jdbc-url>${hiveServer2Url}</jdbc-url>
+      <script>create-customer-producttype-total.hql</script>
+      <param>user=${user}</param>
+      <param>queue=${queueName}</param>
+      <param>tableBasePath=${tableBasePath}</param>
+    </hive2>
+    <ok to="populate-customer-target-adv"/>
+    <error to="kill"/>
+  </action>
+  <action cred="${kerberos.workflow.credentials}" name="populate-customer-target-adv" retry-interval="1" retry-max="3">
+    <hive2 xmlns="uri:oozie:hive2-action:0.1">
+      <job-xml>${subworkflowPath}/hive-config.xml</job-xml>
+      <configuration>
+        <property>
+          <name>oozie.hive.defaults</name>
+          <value>${subworkflowPath}/hive-config.xml</value>
+        </property>
+      </configuration>
+      <jdbc-url>${hiveServer2Url}</jdbc-url>
+      <script>create-customer-target-adv.hql</script>
+      <param>user=${user}</param>
+      <param>queue=${queueName}</param>
+    </hive2>
+    <ok to="end"/>
+    <error to="kill"/>
+  </action>
+  <kill name="kill">
+    <message>error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill>
+  <end name="end"/>
+</workflow-app>
